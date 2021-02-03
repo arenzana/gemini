@@ -1,0 +1,7 @@
+# Testing blogging from emacs
+Ping?
+
+
+# Heading
+
+This post was written and published from within emacs

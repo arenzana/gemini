@@ -1,0 +1,225 @@
+# Emacs Go Mode
+You will notice how much I use "me" and "I" on this post. This because
+your emacs configuration is extremely personal. You are creating a
+"dream editor", and the options that I pick might not be of your
+preference. Feel free to make it your own!
+
+Back on topic. I started writing Go in late 2015. At first, I used
+[Sublime Text], which I like a lot, but I was a little jealous of those
+using [vim-go] and I figured there would be a way to make myself at home
+writing Go in Emacs. This is how the adventure began.
+
+
+=> https://www.sublimetext.com/ Sublime Text
+=> https://github.com/fatih/vim-go vim-go
+
+
+# Find a Mode!
+
+The first thing I had to do was find a major mode for Go on emacs. It
+didn't take me long to find [go-mode]. Installation is not hard, as
+it's available as a package in the MELPA repository. A simple `M-x
+package-install go-mode' sufficed. Configuring it was a bit harder.
+
+
+=> https://github.com/dominikh/go-mode.el go-mode
+
+
+# Configuration
+
+This is my `.emacs' configuration for Go.
+
+```
+;;Load Go-specific language syntax
+;;For gocode use https://github.com/mdempsky/gocode
+(defun go-mode-setup ()
+  (go-eldoc-setup))
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Format before saving
+(defun go-mode-setup ()
+  (go-eldoc-setup)
+  (add-hook 'before-save-hook 'gofmt-before-save))
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Goimports
+(defun go-mode-setup ()
+  (go-eldoc-setup)
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save))
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Godef, shows function definition when calling godef-jump
+(defun go-mode-setup ()
+  (go-eldoc-setup)
+  (local-set-key (kbd "M-.") 'godef-jump))
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Custom Compile Command
+(defun go-mode-setup ()
+  ;;  (setq compile-command "go build -v && go test -v && go vet && golint && errcheck")
+  (linum-mode 1)
+  (setq compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint")
+  (setq compilation-read-command nil)
+  ;;  (define-key (current-local-map) "\C-c\C-c" 'compile)
+  (local-set-key (kbd "M-,") 'compile)
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Load auto-complete
+(ac-config-default)
+(require 'auto-complete-config)
+(require 'go-autocomplete)
+
+;;Go rename
+
+(require 'go-rename)
+
+;;Configure golint
+(add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
+(require 'golint)
+
+;;Smaller compilation buffer
+(setq compilation-window-height 14)
+(defun my-compilation-hook ()
+  (when (not (get-buffer-window "*compilation*"))
+    (save-selected-window
+      (save-excursion
+	(let* ((w (split-window-vertically))
+	       (h (window-height w)))
+	  (select-window w)
+	  (switch-to-buffer "*compilation*")
+	  (shrink-window (- h compilation-window-height)))))))
+(add-hook 'compilation-mode-hook 'my-compilation-hook)
+
+;;Other Key bindings
+(global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
+
+;;Compilation autoscroll
+(setq compilation-scroll-output t)
+```
+
+
+# The Basics
+
+That's a lot! Yeah, I know, but before you freak out, I'll give you a
+run down of what each block is for (although the comments should help
+a lot).
+
+```
+;;Load Go-specific language syntax
+;;For gocode use https://github.com/mdempsky/gocode
+(defun go-mode-setup ()
+  (go-eldoc-setup))
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Format before saving
+(defun go-mode-setup ()
+  (go-eldoc-setup)
+  (add-hook 'before-save-hook 'gofmt-before-save))
+(add-hook 'go-mode-hook 'go-mode-setup)
+
+;;Goimports
+(defun go-mode-setup ()
+  (go-eldoc-setup)
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save))
+(add-hook 'go-mode-hook 'go-mode-setup)
+```
+
+This block enables `go-mode' and makes sure it runs `gofmt' before
+saving. `gofmt' allows our code to be nice and tidy and to let
+`go-mode' take care of importing the required packages. Nifty, huh?
+Makes coding nicer.
+
+
+# Making life even easier
+
+Some extra elements to make our lives easier. Not necessary, but nice
+to have.
+
+```
+;;Custom Compile Command
+(defun go-mode-setup ()
+  ;;  (setq compile-command "go build -v && go test -v && go vet && golint && errcheck")
+  (linum-mode 1)
+  (setq compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint")
+  (setq compilation-read-command nil)
+  ;;  (define-key (current-local-map) "\C-c\C-c" 'compile)
+  (local-set-key (kbd "M-,") 'compile)
+(add-hook 'go-mode-hook 'go-mode-setup)
+```
+
+This is a good one. Here I'm configuring `M-,' (Escape key + comma) to
+run `go build', `go test', and `golint'. Extremely simple way make
+sure our code compiles.
+
+
+# Autocomplete and Linting
+
+```
+;;Load auto-complete
+(ac-config-default)
+(require 'auto-complete-config)
+(require 'go-autocomplete)
+
+;;Go rename
+
+(require 'go-rename)
+
+;;Configure golint
+(add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
+(require 'golint)
+```
+
+Sets up `go-autocomplete' and `go-rename'. `go-rename' only is used if
+you want to do project-level renames. Just between us, I barely use
+it.
+
+The last block configures the path of the linter. Remember, Emacs is
+smart, but not /that/ smart.
+
+
+# Beautify our editor
+
+```
+;;Smaller compilation buffer
+(setq compilation-window-height 14)
+(defun my-compilation-hook ()
+  (when (not (get-buffer-window "*compilation*"))
+    (save-selected-window
+      (save-excursion
+	(let* ((w (split-window-vertically))
+	       (h (window-height w)))
+	  (select-window w)
+	  (switch-to-buffer "*compilation*")
+	  (shrink-window (- h compilation-window-height)))))))
+(add-hook 'compilation-mode-hook 'my-compilation-hook)
+```
+
+All of this to make the compilation buffer smaller than a default
+buffer.
+
+```
+;;Other Key bindings
+(global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
+```
+
+How about a simple command to comment out big blocks of code? `C-c
+C-c'. Also, `compilation-scroll-output' simply scrolls the compilation
+buffer all the way to the end.
+
+
+# What's left?
+
+This is my current set up. It works really well for my needs, but it
+might not be yours. Something I'll work on is to integrate `delve'
+(golang debugger) into the editor, but I suppose I'm quite old school.
+
+I also have [Magit] integrated into my workflow, but that's a topic
+for a different episode.  To be honest, I don't miss anything from
+Sublime (or Atom or MS Code), plus it already makes use of my favorite
+editor. A simple `.emacs' file gives me all the customization that I
+need and I know I always have MY set up everywhere.
+
+
+=> https://magit.vc/ Magit

@@ -1,0 +1,89 @@
+# Artisanal Web Hosting
+
+
+
+# Summary
+
+I have an operations background. My first company taught me most of
+what I know about how to run software and server
+operations. Fast-forward 15 years and we are now all about the cloud,
+VPSs, and Kubernetes. I love [the cloud]. Up until a few weeks ago, my
+blog has been hosted at [Scaleway], which has worked great for
+me. Today I run it on my own server where (for better or for worse)
+everything is managed by me.
+
+
+=> https://arenzana.org/2019/04/blogging-with-org-mode/ the cloud
+=> http://scaleway.com/ Scaleway
+
+
+# Why
+
+One thing I was not happy about was Google Analytics. To keep my
+uptime I want to know the number of page loads and system load in
+order to optimize and scale. I know, I should probably be using a CDN
+to mitigate some of these issues, but I don't feel I'm there just
+yet. Google Analytics is one of those services that is not known to be
+privacy friendly, and if you are here, I respect you and your time. I
+don't include ads and I try to keep the tracking as limited as
+possible disabling social crap, etc. For my purposes, I don't need
+Google analytics. A web server logs all of the information I need for
+scaling purposes. All I needed was to access those logs (which I
+already had access to) and store the data in a database, create a
+dashboard, and kiss Google Analytics goodbye.
+
+I know, I could've used AWS or Google Cloud to do this; but the cost
+over time would have been prohibitive. Self-hosting seems like the
+right answer at the moment.
+
+The game plan:
+
+* With the help of my company, I got a new server and some data
+center space (power, networking, and a rack). I know, this is the
+most tricky part as not everyone works for a telco that can provide
+these things. The point of this post is not to justify the
+financial advantage of self-hosting vs the cloud, but to point out
+the elements we overlook by leaving it up to the cloud to do some
+of the heavy lifting.
+
+* I installed ESXi on the server to run all my infrastructure. I have
+done this before, so I felt fairly comfortable reproducing this.
+
+* I used VyOS for all the networking and firewall needs. This was the
+trickiest part. I hate networking. I still do and the networking
+concepts, to be honest, just beat me. Somehow though, with basic
+subnetting and routing skills, you can actually get surprisingly
+far.
+
+* I used [Terraform] to define all my (CentOS 7) infrastructure and
+[Ansible] to automate/standarize the configuration of every element
+in my little cloud.
+
+* NGINX to host my site (quite straight forward).
+
+* Run an Elastic stack (really, just [Beats], [Elasticsearch], and
+[Kibana]) for data processing. From system auditing, to security,
+log parsing, and metrics. This stack is the central unit that gives
+me visibility into what's happening inside my system. This includes
+NGINX log analysis.
+
+
+=> https://www.terraform.io/ Terraform
+=> https://www.ansible.com/ Ansible
+=> https://www.elastic.co/products/beats Beats
+=> https://www.elastic.co/products/elasticsearch Elasticsearch
+=> https://www.elastic.co/products/kibana Kibana
+
+
+# tl;dr
+
+Over the next few weeks I'll be writing about my experience _moving
+away from the cloud_. The work it involved, where I believe it's
+better than the cloud, and where I believe the cloud is superior. I
+will talk about what's left in my set up and how I'm planning on
+tackling it.
+
+They say the journey is as important as the destination itself and, in
+this case, I must agree. I have learned a lot through the
+process. Perhaps someone will learn something from my experience. That
+will make it all worth it!
