@@ -26,16 +26,16 @@ B2AD 040F 88EC 812F 6ABB  8392 E855 12E7 12CC D0C6
 
 ## Articles
 
-=> 20210201-farewall-whatsapp.gmi
-=> 20200819-emacs-27-1-install.gmi
-=> 20200624-emacs-server-mode.gmi
-=> 20191202-emacs-go-mode-revisited.gmi
-=> 20190628-artisanal-hosting.gmi
-=> 20190424-blogging-with-org-mode.gmi
-=> 20190309-emacs-org-mode.gmi
-=> 20190125-emacs-locale.gmi
-=> 20190121-emacs-go-mode.gmi
-=> 20190120-emacs-lovely.gmi
-=> 20181120-hello-world.gmi
+=> 20210201-farewall-whatsapp.gmi [20210201] - Farewell, Whatsapp
+=> 20200819-emacs-27-1-install.gmi [20200819] - Emacs 27.1 Install
+=> 20200624-emacs-server-mode.gmi [20200624] - Emacs Server Mode
+=> 20191202-emacs-go-mode-revisited.gmi [20191202] - Emacs Go Mode Revisited
+=> 20190628-artisanal-hosting.gmi [20190628] - Artisanal Hosting
+=> 20190424-blogging-with-org-mode.gmi [20190424] - Blogging With Org-Mode
+=> 20190309-emacs-org-mode.gmi [20190309] - Emacs Org Mode
+=> 20190125-emacs-locale.gmi [20190125] - Emacs Locale
+=> 20190121-emacs-go-mode.gmi [20190121] - Emacs Go Mode
+=> 20190120-emacs-lovely.gmi [20190120] - Emacs, Lovely
+=> 20181120-hello-world.gmi [20181120] - Hello World!
 
 © 2021 arenzana.org. All Rights Reserved
